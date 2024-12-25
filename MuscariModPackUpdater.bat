@@ -1,1 +1,1 @@
-powershell -NoProfile -ExecutionPolicy Unrestricted .\MuscariModUpdater.ps1
+powershell -NoProfile -ExecutionPolicy Unrestricted .\MuscariModpackUpdater.ps1
