@@ -21,6 +21,9 @@ Function extractModpack($mpFileName) {
 
     #zipファイルを削除
     Remove-Item -Path ".\$mpFileName"
+    
+    $wsobj = new-object -comobject wscript.shell
+    $result = $wsobj.popup("処理が正常に終了しました。",0,"MuscariModpackUpdater",0)
     }
 }
 
