@@ -6,24 +6,33 @@
 # 2024/12/16 1.0.0     新規作成 Tomotomo_
 #========================================
 
-Function extractModpack($mpFileName) {
-    #GitHubからModのZipファイルを取得
-    Invoke-WebRequest -Uri "https://github.com/MuscariServer/ClayiumModpack/releases/download/Release/$mpFileName" -OutFile ".\$mpFileName"
-
-    #フォームの入力が間違っている場合の処理を追加
-    $judgeFile = Get-ChildItem -Filter *$mpFileName*
-    if ($judgeFile -eq $null){
-        $wsobj = new-object -comobject wscript.shell
-        $result = $wsobj.popup("存在しないModpack、またはバージョンです。",0,"MuscariModpackUpdater",16)
-    } else {
-    #ダウンロードしたzipファイルを展開
-    Expand-Archive -Path ".\$mpFileName" -DestinationPath "." -Force
-
-    #zipファイルを削除
-    Remove-Item -Path ".\$mpFileName"
-    
+#フォームの入力が間違っている場合の処理
+Function failedExtractMsg() {
     $wsobj = new-object -comobject wscript.shell
-    $result = $wsobj.popup("処理が正常に終了しました。",0,"MuscariModpackUpdater",0)
+    $result = $wsobj.popup("存在しないModpack、またはバージョンです。",0,"MuscariModpackUpdater",16)
+}
+
+Function extractModpack($mpFileName) {
+    if ($mpFileName -match "^[a-zA-Z0-9\-_]+[0-9]+\.[0-9]+\.[0-9]+-Diff\.zip$") {
+        #GitHubからModのZipファイルを取得
+        Invoke-WebRequest -Uri "https://github.com/MuscariServer/ClayiumModpack/releases/download/Release/$mpFileName" -OutFile ".\$mpFileName"
+
+        #ダウンロードされているか検査
+        $judgeFile = Get-ChildItem -Filter *$mpFileName*
+        if ($judgeFile.Count -eq 0){
+            failedExtractMsg
+        } else {
+        #ダウンロードしたzipファイルを展開
+        Expand-Archive -Path ".\$mpFileName" -DestinationPath "." -Force
+
+        #zipファイルを削除
+        Remove-Item -Path ".\$mpFileName"
+    
+        $wsobj = new-object -comobject wscript.shell
+        $result = $wsobj.popup("処理が正常に終了しました。",0,"MuscariModpackUpdater",0)
+        }
+    } else {
+        failedExtractMsg
     }
 }
 
@@ -67,7 +76,7 @@ $label2.Text = "Modpackのバージョンを入力してください。"
 
 $textBox = New-Object System.Windows.Forms.TextBox
 $textBox.Location = New-Object System.Drawing.Point(10,120)
-$textBox.Size = New-Object System.Drawing.Size(100,200)
+$textBox.Size = New-Object System.Drawing.Size(100,20)
 
 #実行ボタンを作成
 $OKButton = New-Object System.Windows.Forms.Button
@@ -98,7 +107,6 @@ $CancelButton.Add_Click({
         $Form.Close()
     })
 
-$form.Controls.Add($pic) 
 $form.Controls.Add($label1)
 $form.Controls.Add($Combo)
 $form.Controls.Add($label2)
