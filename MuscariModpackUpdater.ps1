@@ -2,25 +2,26 @@
 # MuscariModpackUpdater.ps1
 #
 # 更新履歴
-# 日付       バージョン 更新内容 作業者
+# 日付       バージョン 備考     作業者
 # 2024/12/16 1.0.0     新規作成 Tomotomo_
+# 2025/01/01 1.0.1             Tomotomo_
 #========================================
 
 #フォームの入力が間違っている場合の処理
-Function failedExtractMsg() {
+Function failedExtractMsg($reason) {
     $wsobj = new-object -comobject wscript.shell
-    $result = $wsobj.popup("存在しないModpack、またはバージョンです。",0,"MuscariModpackUpdater",16)
+    $result = $wsobj.popup("エラー：$reason",0,"MuscariModpackUpdater",16)
 }
 
-Function extractModpack($mpFileName) {
+Function extractModpack($mpFileName, $ver) {
     if ($mpFileName -match "^[a-zA-Z0-9\-_]+[0-9]+\.[0-9]+\.[0-9]+-Diff\.zip$") {
         #GitHubからModのZipファイルを取得
-        Invoke-WebRequest -Uri "https://github.com/MuscariServer/ClayiumModpack/releases/download/Release/$mpFileName" -OutFile ".\$mpFileName"
+        Invoke-WebRequest -Uri "https://github.com/MuscariServer/ClayiumModpack/releases/download/Release-$ver/$mpFileName" -OutFile ".\$mpFileName"
 
         #ダウンロードされているか検査
         $judgeFile = Get-ChildItem -Filter *$mpFileName*
         if ($judgeFile.Count -eq 0){
-            failedExtractMsg
+            failedExtractMsg "更新ファイルが存在しません。"
         } else {
         #ダウンロードしたzipファイルを展開
         Expand-Archive -Path ".\$mpFileName" -DestinationPath "." -Force
@@ -32,7 +33,7 @@ Function extractModpack($mpFileName) {
         $result = $wsobj.popup("処理が正常に終了しました。",0,"MuscariModpackUpdater",0)
         }
     } else {
-        failedExtractMsg
+        failedExtractMsg "$mpFilename は存在しないModpackです。"
     }
 }
 
@@ -91,7 +92,7 @@ $OKButton.Add_Click({
         $version = $textBox.Text
         $fusion = "$nameModpack-$version-Diff.zip"
         $Form.DialogResult = [System.Windows.Forms.DialogResult]::OK
-        extractModpack $fusion
+        extractModpack $fusion $version
         $Form.Close()
     })
 
