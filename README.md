@@ -23,4 +23,4 @@
 ### Modpackバージョン情報
 |Modpack名|最新バージョン|
 |-|-|
-|Journey-of-Clayium|1.0.0|
+|Journey-of-Clayium|1.0.2|
