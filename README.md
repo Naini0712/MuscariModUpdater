@@ -12,7 +12,7 @@
 ### 使用方法
 |項番|手順|
 |-|-|
-|1|以下の2点をダウンロードする。<br>https://github.com/Naini0712/MuscariModUpdater/releases/download/release/MuscariModpackUpdater.bat<br>https://github.com/Naini0712/MuscariModUpdater/releases/download/release/MuscariModpackUpdater.ps1|
+|1|以下の2点をダウンロードする。<br>https://github.com/Naini0712/MuscariModUpdater/releases/download/release-1.0.1/MuscariModpackUpdater.bat<br>https://github.com/Naini0712/MuscariModUpdater/releases/download/release-1.0.1/MuscariModpackUpdater.ps1|
 |2|ダウンロードした2ファイルをアップデートしたいModpackのインストールフォルダ（modsやscreenshotsがある場所）に格納する。
 |3|図1<br>![図1](https://i.imgur.com/y5paoKD.png)<br>MuscariModpackUpdater.batをダブルクリックで実行し、図1の画面が表示されることを確認する。|
 |4|図1①の「詳細情報」をクリックする。
